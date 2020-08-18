@@ -1,0 +1,83 @@
+CREATE DATABASE IF NOT EXISTS ocr_project;
+
+USE ocr_project;
+
+CREATE TABLE IF NOT EXISTS `owner` 
+(
+  `OWNER_ID` int unsigned NOT NULL,
+  `FIRST_NAME` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `LAST_NAME` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `ADDRESS` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `CITY` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `STATE` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `ZIP_CODE` int unsigned NOT NULL,
+  `PHONE_NUMBER` varchar(14) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`OWNER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `vehicle` 
+(
+  `VIN_ID` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `VEHICLE_BRAND` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `MODEL` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `COLOR` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `TYPE` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `OWNER_ID` int unsigned NOT NULL,
+  PRIMARY KEY (`VIN_ID`),
+  KEY `FK_vehicle_OWNER_ID` (`OWNER_ID`),
+  CONSTRAINT `FK_vehicle_OWNER_ID` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`OWNER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `license` 
+(
+  `LICENSE_ID` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `OWNER_ID` int unsigned NOT NULL,
+  `VIN_ID` varchar(17) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `ISSUE_DATE` date NOT NULL,
+  `EXPIRATION_DATE` date NOT NULL,
+  `LICENSE_FEE` int unsigned NOT NULL,
+  PRIMARY KEY (`LICENSE_ID`),
+  KEY `FK_license_OWNER_ID` (`OWNER_ID`),
+  KEY `FK_license_VIN_ID` (`VIN_ID`),
+  CONSTRAINT `FK_license_OWNER_ID` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`OWNER_ID`),
+  CONSTRAINT `FK_license_VIN_ID` FOREIGN KEY (`VIN_ID`) REFERENCES `vehicle` (`VIN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `vehiclehistory` 
+(
+  `EVENT_ID` int unsigned NOT NULL,
+  `VIN_ID` varchar(17) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `EVENT_DATE` date NOT NULL,
+  `EVENT_DESC` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`EVENT_ID`),
+  KEY `FK_vehiclehistory_VIN_ID` (`VIN_ID`),
+  CONSTRAINT `FK_vehiclehistory_VIN_ID` FOREIGN KEY (`VIN_ID`) REFERENCES `vehicle` (`VIN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `emission` 
+(
+  `INSPECTION_ID` int unsigned NOT NULL,
+  `VIN_ID` varchar(17) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `EMISSION_LEVEL_ACC` bool NOT NULL,
+  `INSPECTION_DATE` date NOT NULL,
+  PRIMARY KEY (`INSPECTION_ID`),
+  KEY `FK_emission_VIN_ID` (`VIN_ID`),
+  CONSTRAINT `FK_emission_VIN_ID` FOREIGN KEY (`VIN_ID`) REFERENCES `vehicle` (`VIN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `insurance` 
+(
+  `INSURANCE_ID` varchar(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `OWNER_ID` int unsigned NOT NULL,
+  `VIN_ID` varchar(17) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `EFFECTIVE_DATE` date NOT NULL,
+  `IN_EXPIRATION_DATE` date NOT NULL,
+  `IN_TYPE` varchar(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`INSURANCE_ID`),
+  KEY `FK_insurance_OWNER_ID` (`OWNER_ID`),
+  KEY `FK_insurance_VIN_ID` (`VIN_ID`),
+  CONSTRAINT `FK_insurance_OWNER_ID` FOREIGN KEY (`OWNER_ID`) REFERENCES `owner` (`OWNER_ID`),
+  CONSTRAINT `FK_insurance_VIN_ID` FOREIGN KEY (`VIN_ID`) REFERENCES `vehicle` (`VIN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
