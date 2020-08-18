@@ -1,1 +1,21 @@
-
+## Run the SQL scripts in the order in which the tables are created in the database schema.
+##
+##        1. Owner.sql
+##        2. Vehicle.sql
+##        3. License.sql
+##        4. VehicleHistory.sql
+##        5. Emission.sql
+##        6. Insurance.sql
+##
+##
+##
+##
+##
+##
+##
+##
+##
+## Credits to Ibtisam Alzahrani, who I worked with on the creation of this dummy database
+##
+##
+##
