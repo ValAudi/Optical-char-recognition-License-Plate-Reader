@@ -61,7 +61,7 @@ def RegExtract():
 def DatabaseConnection():
     global myresulttup
     try:
-        mydb = mysql.connector.connect(host = "localhost", user = "root", passwd = "Val@123#", database = "ocr_project")
+        mydb = mysql.connector.connect(host = "localhost", user = "user", passwd = "passwd", database = "ocr_project")
         mycursor = mydb.cursor()
         query = "SELECT FIRST_NAME, LAST_NAME, ADDRESS, CITY, STATE, ZIP_CODE, VEHICLE_BRAND, MODEL, COLOR, TYPE, LICENSE_ID, ISSUE_DATE, EXPIRATION_DATE FROM owner as o INNER JOIN vehicle as v ON o.OWNER_ID = v.OWNER_ID INNER JOIN license as l ON v.OWNER_ID = l.OWNER_ID WHERE LICENSE_ID = %s"
         mycursor.execute(query, (LicensePlateNo,))
